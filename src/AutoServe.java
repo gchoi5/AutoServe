@@ -1,15 +1,35 @@
 public class AutoServe{
 	public static void main(String[] args){
-		
+		//generate tables and set empty
+		HallStatus.init();	
+
+		//load ingredient information from databse
 		KitchenStatus.loadIngredientList();
+
+		//load menu list from database
 		MenuTable.loadMenuList();
-		MenuTable.updateMenuListAvailability();
-		HallStatus.init();
 
+		//check menu availability
+		MenuTable.updateMenuListAvailability();	
+		
+
+
+
+		/*
+		 *Customer sends order(s) to Waiter
 		Customer customer = new Customer();
-		customer.sendOrderToWaiter(5, 3);	//-> 1
-		customer.sendOrderToWaiter(5, 4);	//-> 2
+		customer.sendOrderToWaiter(5, 3);	//Table number:5 
+											//Menu 3: Chicken
+											//It will be indexed as 1 (the first order)
+		customer.sendOrderToWaiter(5, 4);	//Table number: 5
+											//Menu 4: Steak
+											//It will be indexed as 2 (the second order)
 
+		//KitchenStatus has two lists
+		//	KitchenStatus.selecteMenuList
+		//		List of menu items Customer wants
+		//	KitchenStatus.orderList
+		//		List of menu wating to be cooked
 		KitchenStatus.printSelectedMenuList();
 		
 		//HallStatus.printTableInfoAll();
@@ -17,8 +37,8 @@ public class AutoServe{
 		HallStatus.getTable(5).printTableInfo();
 
 		Waiter waiter = new Waiter();
-		waiter.confirmOrder(5,1);	//->1
-		waiter.confirmOrder(5,2);	//->2
+		waiter.confirmOrder(5,1);	//Associate 1st order to table 5
+		waiter.confirmOrder(5,2);	//Associate 2nd order to table 5
 
 		KitchenStatus.printSelectedMenuList();
 		KitchenStatus.printOrderList();
@@ -44,8 +64,10 @@ public class AutoServe{
 		OrderControlObject orderCO = new OrderControlObject();
 		orderCO.serveOrder(10, 3);
 
-
 		HallStatus.getTable(10).printTableInfo();
+
+		*/
+
 		/*
 		KitchenStatus.loadIngredientList();
 		KitchenStatus.printIngredientList();
