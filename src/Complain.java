@@ -12,7 +12,9 @@ class Complain{
 		System.out.println("\tContent: " + this.content);
 	}
 
-	//constructor
+	/**
+	 *
+	 */	
 	public Complain(int idx, int tabNum, String content){
 		this.idx = idx;
 		this.tabNum = tabNum;
@@ -67,31 +69,48 @@ class ComplainList{
 
 	static List<Complain> complainList = new LinkedList<Complain>();
 
-	public static void addComplain(int tabNum, String content){
+	public static boolean addComplain(int tabNum, String content){
+		if(tabNum < 1 || 20 < tabNum){
+			System.out.println("Wrong table number");
+
+			return false;
+		}
+
+		if(content.isEmpty()){
+			System.out.println("Empty content");
+
+			return false;
+		}
+		
 		complainList.add(new Complain(nextComplainIdx, tabNum, content));
 
 		nextComplainIdx++;
+
+		return true;
 	}
-	public static void removeComplain(int complainIdx){
+	public static boolean removeComplain(int complainIdx){
 		Iterator<Complain> tempComplainListIterator = complainList.iterator();
-		while(tempComplainListIterator.hasNext())
-			if(tempComplainListIterator.next().getIdx() == complainIdx)
+		while(tempComplainListIterator.hasNext()){
+			if(tempComplainListIterator.next().getIdx() == complainIdx){
 				tempComplainListIterator.remove();
+
+				return true;
+			}
+
+		}
+
+		System.out.println("Complain " + complainIdx + "does not exist");
+		return false;
 	}
-	/*
 	public static Complain getComplain(int complainIdx){
 		Iterator<Complain> tempComplainListIterator = complainList.iterator();
-
 		while(tempComplainListIterator.hasNext()){
 			Complain tempComplain = tempComplainListIterator.next();
-
 			if(tempComplain.getIdx() == complainIdx)
 				return tempComplain;
 		}
-		
 		return null;
 	}
-	*/
 
 	//methods for testing
 	public static void printComplainList(){
