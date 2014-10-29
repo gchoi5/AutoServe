@@ -71,19 +71,17 @@ public class AutoServe{
 		/*
 		KitchenStatus.loadIngredientList();
 		KitchenStatus.printIngredientList();
-
-		KitchenStatus.loadIngredientList();
-		KitchenStatus.printIngredientList();
 		*/
 
-		/*
+
+		
 		MenuTable.loadMenuList();
 		MenuTable.printMenuListWithIngredient();
 
 		KitchenStatus.loadIngredientList();
 		MenuTable.updateMenuListAvailability();
 		MenuTable.printMenuListWithIngredient();
-		*/
+		
 
 		/*
 		ComplainList.addComplain(5, "Too slow!");	//1
