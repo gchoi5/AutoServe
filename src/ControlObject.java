@@ -5,14 +5,17 @@ class OrderControlObject{
 	public OrderControlObject(){
 	}
 	//(Customer) sends order(s) 
-	public void sendOrderToWaiter(int tabNum, int menuItemIdx){
-		KitchenStatus.addToSelectedMenuList(
+	public boolean sendOrderToWaiter(int tabNum, int menuItemIdx){
+		if(KitchenStatus.addToSelectedMenuList(
 			new OrderedMenuItem(	KitchenStatus.nextSelectedMenuListIndex,
 									MenuTable.getMenuItem(menuItemIdx),	
 									tabNum)		//being waited
 
-		);
-		KitchenStatus.nextSelectedMenuListIndex++;
+		)){
+			KitchenStatus.nextSelectedMenuListIndex++;
+			return true;
+		}
+		return false;
 	}
 	//from selectedMenuItemList to orderList
 	public void confirmOrder(int tabNum, int selectedMenuItemIdx){

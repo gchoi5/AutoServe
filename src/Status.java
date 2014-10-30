@@ -169,6 +169,9 @@ class HallStatus{
 	}
 	//getter
 	public static Table getTable(int tabNum){
+		if(tabNum < 1 || 20 < tabNum)
+			return null;
+
 		return table[tabNum - 1];
 	}
 	public static void printTableInfoAll(){
@@ -188,9 +191,13 @@ class KitchenStatus{
 	static List<OrderedMenuItem> orderList = new LinkedList<OrderedMenuItem>();
 	static List<Ingredient> ingredientList = new LinkedList<Ingredient>();
 
-	public static void addToSelectedMenuList(OrderedMenuItem orderedMenuItem){
+	public static boolean addToSelectedMenuList(OrderedMenuItem orderedMenuItem){
+		if(orderedMenuItem == null)
+			return false;
 	
 		selectedMenuList.add(orderedMenuItem);
+
+		return true;
 	}
 	public static void addToOrderList(OrderedMenuItem orderedMenuItem){
 		orderList.add(orderedMenuItem);

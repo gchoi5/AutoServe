@@ -237,6 +237,9 @@ class MenuTable{
 	}
 	*/
 	public static boolean checkMenuAvailability(MenuItem menuItem){
+		if(menuItem == null)
+			return false;
+
 		Iterator<Ingredient> tempMenuIngredientIterator = menuItem.getIngredientList().iterator();
 
 		while(tempMenuIngredientIterator.hasNext()){

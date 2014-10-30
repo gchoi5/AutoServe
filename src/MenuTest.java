@@ -25,14 +25,18 @@ public class MenuTest{
 	//B (invalid test): 2, 3, 5
 	public static int menuItemIdxGen2(String cond){
 		int[] valid = {2,3,5};
-		int[] invalid = {1,5};
 	
 		Random rand = new Random();
+		int tempMenuIdx = rand.nextInt();
 
 		if(cond.equals("A"))
-			return valid[Math.abs(rand.nextInt()) % 3];
+			return valid[Math.abs(tempMenuIdx) % 3];
 
-		return invalid[Math.abs(rand.nextInt()) % 2];
+		while(tempMenuIdx == 2 && tempMenuIdx == 3 && tempMenuIdx == 5){
+			tempMenuIdx = rand.nextInt();
+		}
+
+		return tempMenuIdx;
 	}
 
 	public static void main(String[] args){

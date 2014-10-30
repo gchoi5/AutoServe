@@ -21,6 +21,9 @@ class Customer{
 		OrderControlObject orderCO = new OrderControlObject();
 		orderCO.cancelOrder(tabNum, menuItemIdx);
 	}
+	public boolean complain(int tabNum, String content){
+		return ComplainList.addComplain(tabNum, content);
+	}
 }
 class Employee{
 	private String name;
@@ -129,12 +132,21 @@ class Waiter extends Employee{
 	public List<OrderedMenuItem> getKitchenOrderList(){
 		return KitchenStatus.orderList;
 	}
-	public void billTable(Table table){
+	public boolean billTable(Table table){
 		//after Customer pays
 		//Table status will be set empty
 		//Table order list will be cleaned
+		if(table == null)
+			return false;
+		
+		if(!table.getStatus().equals("served"))
+			return false;
+
 		table.setStatus("empty");
+		table.getSelectedOrderList().clear();
 		table.getServedOrderList().clear();	
+
+		return true;
 	}
 }
 
