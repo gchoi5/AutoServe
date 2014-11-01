@@ -14,6 +14,7 @@ public class AutoServe{
 		
 
 
+		new UserInterface();
 
 		/*
 		 *Customer sends order(s) to Waiter
@@ -74,6 +75,7 @@ public class AutoServe{
 		*/
 
 
+		/*
 		
 		MenuTable.loadMenuList();
 		MenuTable.printMenuListWithIngredient();
@@ -81,7 +83,7 @@ public class AutoServe{
 		KitchenStatus.loadIngredientList();
 		MenuTable.updateMenuListAvailability();
 		MenuTable.printMenuListWithIngredient();
-		
+		*/
 
 		/*
 		ComplainList.addComplain(5, "Too slow!");	//1

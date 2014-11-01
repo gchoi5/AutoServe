@@ -32,6 +32,8 @@ class Employee{
 	private String id;
 	private String pass;
 	
+	private String type;
+	
 	/**
 	 * 
 	 */
@@ -40,12 +42,14 @@ class Employee{
 		this.age = new Integer(0);
 		this.id = new String();
 		this.pass = new String();
+		this.type = new String();
 	}
-	public Employee(String name, Integer age, String id, String pass){
+	public Employee(String name, Integer age, String id, String pass, String type){
 		this.name = new String(name);
 		this.age = new Integer(age);
 		this.id = new String(id);
 		this.pass = new String(pass);
+		this.type = new String(type);
 	}
 	/**
 	 * @return the name
@@ -95,6 +99,20 @@ class Employee{
 	}
 
 	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/**
 	 * @param age the age to set
 	 */
 	public void setAge(int age) {
@@ -117,8 +135,8 @@ class Waiter extends Employee{
 	public Waiter(){
 		super();
 	}
-	public Waiter(String name, Integer age, String id, String pass){
-		super(name, age, id, pass);
+	public Waiter(String name, Integer age, String id, String pass, String type){
+		super(name, age, id, pass, type);
 	}
 	//method
 	public void confirmOrder(int tabNum, int selectedMenuItemIdx){
@@ -155,8 +173,8 @@ class KitchenAssistant extends Employee{
 	public KitchenAssistant(){
 		super();
 	}
-	public KitchenAssistant(String name, Integer age, String id, String pass){
-		super(name, age, id, pass);
+	public KitchenAssistant(String name, Integer age, String id, String pass, String type){
+		super(name, age, id, pass, type);
 	}
 	//method
 	public List<OrderedMenuItem> getKitchenOrderList(){
@@ -174,8 +192,8 @@ class Manager extends KitchenAssistant{
 	public Manager(){
 		super();
 	}
-	public Manager(String name, Integer age, String id, String pass){
-		super(name, age, id, pass);
+	public Manager(String name, Integer age, String id, String pass, String type){
+		super(name, age, id, pass, type);
 	}
 	//method
 	public boolean insertEmployee(String name, int age, String id, String pass, String type){

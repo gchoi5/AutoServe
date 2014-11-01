@@ -6,6 +6,12 @@ class OrderControlObject{
 	}
 	//(Customer) sends order(s) 
 	public boolean sendOrderToWaiter(int tabNum, int menuItemIdx){
+		if(tabNum < 1 || 20 < tabNum)
+			return false;
+
+		if(menuItemIdx < 1 || 5 < menuItemIdx)
+			return false;
+
 		if(KitchenStatus.addToSelectedMenuList(
 			new OrderedMenuItem(	KitchenStatus.nextSelectedMenuListIndex,
 									MenuTable.getMenuItem(menuItemIdx),	
@@ -81,19 +87,22 @@ class LogInControlObject{
 					return new Manager(	dbCO.getResultSet().getString(1),
 										dbCO.getResultSet().getInt(2),
 										dbCO.getResultSet().getString(3),
-										dbCO.getResultSet().getString(4));
+										dbCO.getResultSet().getString(4),
+										tempUserType);
 				}
 				else if(tempUserType.equals("W")){
 					return new Waiter(	dbCO.getResultSet().getString(1),
 										dbCO.getResultSet().getInt(2),
 										dbCO.getResultSet().getString(3),
-										dbCO.getResultSet().getString(4));
+										dbCO.getResultSet().getString(4),
+										tempUserType);
 				}
 				else if(tempUserType.equals("KA")){
 					return new KitchenAssistant(	dbCO.getResultSet().getString(1),
 													dbCO.getResultSet().getInt(2),
 													dbCO.getResultSet().getString(3),
-													dbCO.getResultSet().getString(4));
+													dbCO.getResultSet().getString(4),
+													tempUserType);
 				}
 			}
 		}catch(SQLException sqle){

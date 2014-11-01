@@ -288,6 +288,21 @@ class KitchenStatus{
 
 
 	/**
+	 * @return the selectedMenuList
+	 */
+	public static List<OrderedMenuItem> getSelectedMenuList() {
+		return selectedMenuList;
+	}
+
+	/**
+	 * @param selectedMenuList the selectedMenuList to set
+	 */
+	public static void setSelectedMenuList(
+			List<OrderedMenuItem> selectedMenuList) {
+		KitchenStatus.selectedMenuList = selectedMenuList;
+	}
+
+	/**
 	 * @return the orderList
 	 */
 	public static List<OrderedMenuItem> getOrderList() {
