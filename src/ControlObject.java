@@ -6,7 +6,7 @@ class OrderControlObject{
 	}
 	//(Customer) sends order(s) 
 	public boolean sendOrderToWaiter(int tabNum, int menuItemIdx){
-		if(tabNum < 1 || 20 < tabNum)
+		if(tabNum < 1 || (20 < tabNum && tabNum != 100))
 			return false;
 
 		if(menuItemIdx < 1 || 5 < menuItemIdx)
@@ -25,13 +25,17 @@ class OrderControlObject{
 	}
 	//from selectedMenuItemList to orderList
 	public void confirmOrder(int tabNum, int selectedMenuItemIdx){
+		OrderedMenuItem test = KitchenStatus.getFromSelectMenuList(selectedMenuItemIdx);
+		System.out.println("selectedMenuItemIdx: " + selectedMenuItemIdx);
+		if(test == null)
+			System.out.println("asdfasdf");
 		OrderedMenuItem tempOrderedMenuItem = 
 			new OrderedMenuItem(	KitchenStatus.nextOrderListIndex, 
 									KitchenStatus.getFromSelectMenuList(selectedMenuItemIdx), 
 									tabNum);
 
 		KitchenStatus.removeFromSelectMenuList(selectedMenuItemIdx);
-		KitchenStatus.orderList.add(tempOrderedMenuItem);
+		KitchenStatus.addToOrderList(tempOrderedMenuItem);
 
 		tempOrderedMenuItem.setStatus("confirmed");
 		

@@ -3,11 +3,13 @@ public class AutoServe{
 		//generate tables and set empty
 		HallStatus.init();	
 
-		//load ingredient information from databse
-		KitchenStatus.loadIngredientList();
-
 		//load menu list from database
 		MenuTable.loadMenuList();
+		//load ingredient information from databse
+		KitchenStatus.loadSelectedMenuList();
+		KitchenStatus.loadOrderList();
+		KitchenStatus.loadIngredientList();
+
 
 		//check menu availability
 		MenuTable.updateMenuListAvailability();	
@@ -15,9 +17,9 @@ public class AutoServe{
 
 
 		new UserInterface();
-
-		/*
-		 *Customer sends order(s) to Waiter
+		
+	/*	
+		//Customer sends order(s) to Waiter
 		Customer customer = new Customer();
 		customer.sendOrderToWaiter(5, 3);	//Table number:5 
 											//Menu 3: Chicken
@@ -66,8 +68,7 @@ public class AutoServe{
 		orderCO.serveOrder(10, 3);
 
 		HallStatus.getTable(10).printTableInfo();
-
-		*/
+*/
 
 		/*
 		KitchenStatus.loadIngredientList();

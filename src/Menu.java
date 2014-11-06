@@ -140,13 +140,13 @@ class MenuItem{
 }
 
 class OrderedMenuItem extends MenuItem{
-	private int idx;	//override
+	private int orderIdx;	//override
 	private int tabNum;
 	private String status = new String();	//override	
 											//being waited | confirmed | being cooked | served
 
 	public void printOrderedMenuItem(){
-		System.out.println("-----Order " + this.idx + "-----");
+		System.out.println("-----Order " + this.orderIdx + "-----");
 		System.out.println("Menu title: " + this.getTitle());
 
 		System.out.println("Table: " + this.tabNum);
@@ -155,13 +155,13 @@ class OrderedMenuItem extends MenuItem{
 	/**
 	 * constructor
 	 */
-	public OrderedMenuItem(int idx, MenuItem menuItem, int tabNum){
+	public OrderedMenuItem(int orderIdx, MenuItem menuItem, int tabNum){
+
 		super(menuItem);
 
-		this.idx = idx;
+		this.orderIdx = orderIdx;
 		this.status = new String("being waited");
 		this.tabNum = tabNum;
-		this.status = new String();
 	}
 	/*
 	public OrderedMenuItem(int idx, MenuItem menuItem, Table table){
@@ -190,15 +190,15 @@ class OrderedMenuItem extends MenuItem{
 	/**
 	 * @return the idx
 	 */
-	public int getIdx() {
-		return idx;
+	public int getOrderIdx() {
+		return this.orderIdx;
 	}
 
 	/**
 	 * @param idx the idx to set
 	 */
-	public void setIdx(int idx) {
-		this.idx = idx;
+	public void setOrderIdx(int orderIdx) {
+		this.orderIdx = orderIdx;
 	}
 
 	/**
@@ -252,7 +252,7 @@ class MenuTable{
 			while(tempKitchenIngredientIterator.hasNext()){
 				Ingredient tempKitchenIngredient = tempKitchenIngredientIterator.next();
 				if(tempKitchenIngredient.getIngName().equals(tempIngName))
-					if(tempMenuIngredient.getQuantity() > tempKitchenIngredient.getQuantity())
+					if(tempMenuIngredient.getQuantity() >= tempKitchenIngredient.getQuantity())
 						return false;
 			}
 		}

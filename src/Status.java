@@ -187,26 +187,107 @@ class HallStatus{
 class KitchenStatus{
 	static int nextSelectedMenuListIndex = 1;
 	static int nextOrderListIndex = 1;
+
 	static List<OrderedMenuItem> selectedMenuList = new LinkedList<OrderedMenuItem>();
 	static List<OrderedMenuItem> orderList = new LinkedList<OrderedMenuItem>();
 	static List<Ingredient> ingredientList = new LinkedList<Ingredient>();
 
+	public static boolean loadSelectedMenuList(){
+		selectedMenuList.clear();
+
+		DatabaseControlObject dbCO = new DatabaseControlObject();
+		dbCO.openConnection();
+		try{
+			dbCO.setStatement(dbCO.getConnection().createStatement());
+			dbCO.setResultSet(dbCO.getStatement().executeQuery("select * from SelectedMenuList"));
+			while(dbCO.getResultSet().next()){
+				//selectedMenuList.add(new OrderedMenuItem(	dbCO.getResultSet().getInt(1),
+				selectedMenuList.add(new OrderedMenuItem( 	dbCO.getResultSet().getInt(1),
+															MenuTable.getMenuItem(dbCO.getResultSet().getInt(2)),
+															100));
+				nextSelectedMenuListIndex = dbCO.getResultSet().getInt(1);					
+			}
+		}catch(SQLException sqle){
+			sqle.toString();
+			return false;
+		
+		}
+		nextSelectedMenuListIndex++;
+		dbCO.closeConnection();
+		KitchenStatus.printSelectedMenuList();
+		return true;
+
+	}
+	public static boolean loadOrderList(){
+		orderList.clear();
+
+		DatabaseControlObject dbCO = new DatabaseControlObject();
+		dbCO.openConnection();
+		try{
+			dbCO.setStatement(dbCO.getConnection().createStatement());
+			dbCO.setResultSet(dbCO.getStatement().executeQuery("select * from OrderList"));
+			while(dbCO.getResultSet().next()){
+				orderList.add(new OrderedMenuItem(	dbCO.getResultSet().getInt(1),
+													MenuTable.getMenuItem(dbCO.getResultSet().getInt(2)),
+													dbCO.getResultSet().getInt(2)));
+				nextOrderListIndex = dbCO.getResultSet().getInt(1);
+			}
+		}catch(SQLException sqle){
+			sqle.toString();
+			return false;
+		}
+		nextOrderListIndex++;
+		dbCO.closeConnection();
+		KitchenStatus.printOrderList();
+		return true;
+	}
 	public static boolean addToSelectedMenuList(OrderedMenuItem orderedMenuItem){
 		if(orderedMenuItem == null)
 			return false;
 	
 		selectedMenuList.add(orderedMenuItem);
 
+		DatabaseControlObject dbCO = new DatabaseControlObject();
+		dbCO.openConnection();
+		String query = "insert into SelectedMenuList values(?, ?)";
+		try{
+			dbCO.setPreparedStatement(dbCO.getConnection().prepareStatement(query));
+				dbCO.getPreparedStatement().setString(1, "" + nextSelectedMenuListIndex);
+				dbCO.getPreparedStatement().setString(2, "" + orderedMenuItem.getIdx());
+			dbCO.getPreparedStatement().executeUpdate();
+		}catch(SQLException sqle){
+			sqle.toString();
+			dbCO.closeConnection();
+
+			return false;
+		}
+		dbCO.closeConnection();
+
 		return true;
 	}
 	public static void addToOrderList(OrderedMenuItem orderedMenuItem){
 		orderList.add(orderedMenuItem);
+
+		DatabaseControlObject dbCO = new DatabaseControlObject();
+		dbCO.openConnection();
+		String query = "insert into OrderList values(?, ?, ?)";
+		try{
+			dbCO.setPreparedStatement(dbCO.getConnection().prepareStatement(query));
+				dbCO.getPreparedStatement().setString(1, "" + nextOrderListIndex);
+				dbCO.getPreparedStatement().setString(2, "" + orderedMenuItem.getIdx());
+				dbCO.getPreparedStatement().setString(3, "" + orderedMenuItem.getTabNum());
+			dbCO.getPreparedStatement().executeUpdate();
+		}catch(SQLException sqle){
+			sqle.toString();
+			dbCO.closeConnection();
+		}
+		dbCO.closeConnection();
 	}
 	public static OrderedMenuItem getFromSelectMenuList(int orderedMenuItemIdx){
 		Iterator<OrderedMenuItem> tempSelectedMenuListIterator = selectedMenuList.iterator();
 		while(tempSelectedMenuListIterator.hasNext()){
 			OrderedMenuItem tempOrderedMenuItem = tempSelectedMenuListIterator.next();
-			if(tempOrderedMenuItem.getIdx() == orderedMenuItemIdx)
+			if(tempOrderedMenuItem.getOrderIdx() == orderedMenuItemIdx)
 				return tempOrderedMenuItem;
 		}
 		return null;
@@ -215,7 +296,7 @@ class KitchenStatus{
 		Iterator<OrderedMenuItem> tempOrderListIterator = orderList.iterator();
 		while(tempOrderListIterator.hasNext()){
 			OrderedMenuItem tempOrderedMenuItem = tempOrderListIterator.next();
-			if(tempOrderedMenuItem.getIdx() == orderedMenuItemIdx)
+			if(tempOrderedMenuItem.getOrderIdx() == orderedMenuItemIdx)
 				return tempOrderedMenuItem;
 		}
 		return null;	
@@ -223,19 +304,42 @@ class KitchenStatus{
 	public static void removeFromSelectMenuList(int orderedMenuItemIdx){
 		Iterator<OrderedMenuItem> selectedMenuListIterator = selectedMenuList.iterator();
 		while(selectedMenuListIterator.hasNext()){
-			if(selectedMenuListIterator.next().getIdx() == orderedMenuItemIdx){
+			if(selectedMenuListIterator.next().getOrderIdx() == orderedMenuItemIdx){
 				selectedMenuListIterator.remove();
 			}
 		}
+		DatabaseControlObject dbCO = new DatabaseControlObject();
+		dbCO.openConnection();
+		String query = "delete from SelectedMenuList where selectedMenuListIndex = ?";
 	
+		try{
+			dbCO.setPreparedStatement(dbCO.getConnection().prepareStatement(query));
+				dbCO.getPreparedStatement().setString(1, "" + orderedMenuItemIdx);
+			dbCO.getPreparedStatement().executeUpdate();	
+		}catch(SQLException sqle){
+			sqle.toString();
+		}
+		dbCO.closeConnection();
 	}
 	public static void removeFromOrderList(int orderedMenuItemIdx){
 		Iterator<OrderedMenuItem> orderListIterator = orderList.iterator();
 		while(orderListIterator.hasNext()){
-			if(orderListIterator.next().getIdx() == orderedMenuItemIdx){
+			if(orderListIterator.next().getOrderIdx() == orderedMenuItemIdx){
 				orderListIterator.remove();
 			}	
 		}
+		DatabaseControlObject dbCO = new DatabaseControlObject();
+		dbCO.openConnection();
+		String query = "delete from OrderList where orderListIndex = ?";
+	
+		try{
+			dbCO.setPreparedStatement(dbCO.getConnection().prepareStatement(query));
+				dbCO.getPreparedStatement().setString(1, "" + orderedMenuItemIdx);
+			dbCO.getPreparedStatement().executeUpdate();	
+		}catch(SQLException sqle){
+			sqle.toString();
+		}
+		dbCO.closeConnection();
 	
 	}
 	/*
