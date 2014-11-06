@@ -38,8 +38,12 @@ class UserInterface extends JFrame implements ActionListener{
 		this.getContentPane().add("waiterOrdReqPanel", this.waiterPanelSet.orderReqFramePanel);
 		this.getContentPane().add("kaPanel", this.kaPanelSet.mainPanel);
 		this.getContentPane().add("menuFramePanel", this.menuPanelSet.menuFramePanel);
+		
 		this.getContentPane().add("customerMainPanel", this.customerPanelSet.mainPanel);
 		this.getContentPane().add("customerComplainPanel", this.customerPanelSet.complainPanel);
+		this.getContentPane().add("customerTabNumPanel", this.customerPanelSet.tabNumPanel);
+		this.getContentPane().add("customerOrderListPanel", this.customerPanelSet.orderListPanel);
+		
 		this.getContentPane().add("kitchenOrderList", this.kitchenPanelSet.orderListPanel);
 	}
 	public void init(){
@@ -77,6 +81,8 @@ class UserInterface extends JFrame implements ActionListener{
 		this.customerPanelSet.goBackBtn.addActionListener(this);
 		this.customerPanelSet.complainSubmitBtn.addActionListener(this);
 		this.customerPanelSet.complainGoBackBtn.addActionListener(this);
+		this.customerPanelSet.submitBtn.addActionListener(this);
+		this.customerPanelSet.ordListBtn.addActionListener(this);
 
 		this.kitchenPanelSet.goBackFromOrderListPanelBtn.addActionListener(this);
 	}
@@ -228,6 +234,14 @@ class UserInterface extends JFrame implements ActionListener{
 		}
 		else if(ae.getSource() == this.customerPanelSet.complainGoBackBtn){
 			this.contents.show(this.getContentPane(), "customerMainPanel");
+		}
+		else if(ae.getSource() == this.customerPanelSet.ordListBtn){
+			this.contents.show(this.getContentPane(), "customerTabNumPanel");
+			
+		}
+		else if(ae.getSource() == this.customerPanelSet.submitBtn){
+			this.contents.show(this.getContentPane(), "customerOrderList");
+			
 		}
 		else if(ae.getSource() == this.menuPanelSet.sendOrderBtn){
 			Iterator<JCheckBox> tempMenuBtnItr = this.menuPanelSet.menuBtnList.iterator();			
@@ -436,22 +450,26 @@ class KAPanelSet{
 }
 class CustomerPanelSet{
 	//mainPanel start
-	public JPanel mainPanel = new JPanel();
+	public JPanel mainPanel = new JPanel();	
 	public JButton menuTableBtn = new JButton("Menu Table");
 	public JButton complainBtn = new JButton("Complain");
 	public JButton goBackBtn = new JButton("Go Back");
+	public JButton ordListBtn = new JButton("Order List");
 
 	public void setMainPanel(){
 		this.mainPanel.setLayout(null);
 
-		this.menuTableBtn.setBounds(50, 100, 400, 100);
+		this.menuTableBtn.setBounds(50, 50, 400, 50);
 		this.mainPanel.add(this.menuTableBtn);
 
-		this.complainBtn.setBounds(50, 300, 400, 100);
+		this.complainBtn.setBounds(50, 150, 400, 50);
 		this.mainPanel.add(this.complainBtn);	
 
-		this.goBackBtn.setBounds(50, 500, 400, 100);
+		this.goBackBtn.setBounds(50, 250, 400, 50);
 		this.mainPanel.add(this.goBackBtn);
+		
+		this.ordListBtn.setBounds(50, 350, 400, 50);
+		this.mainPanel.add(this.ordListBtn);
 	}
 	//mainPanel end
 	
@@ -486,10 +504,98 @@ class CustomerPanelSet{
 	}
 	//complainPanel end
 
+	//tabNumPanel start
+	public JPanel tabNumPanel = new JPanel();
+	public JTextArea tabNumTA = new JTextArea();
+	public JButton submitBtn = new JButton("Submit");
+	
+	public void setTabNumPanel(){
+		this.tabNumPanel.setLayout(null);
+		
+		this.tabNumTA.setBounds(50, 300, 400, 50);
+		this.tabNumPanel.add(this.tabNumTA);
+		
+		this.submitBtn.setBounds(50, 400, 400, 50);
+		this.tabNumPanel.add(this.submitBtn);
+		
+	}
+	//tabNumPanel end
+	
+	//ordListPanel start
+	public JPanel orderListPanel = new JPanel();
+	
+	public JPanel orderListTitle = new JPanel();
+	
+	public JPanel orderListBody = new JPanel();
+	public JScrollPane orderListScroll = new JScrollPane(orderListBody);
+	
+	public LinkedList<KitchenBtn> cancelBtnList = new LinkedList<KitchenBtn>();
+	public JButton goBackFromOrdListBtn = new JButton();
+	
+	public void setOrderListTitle(){
+		this.orderListTitle.setLayout(null);
+		
+		JLabel tempOrderListTitleLb = new JLabel("Order List", JLabel.LEFT);
+		tempOrderListTitleLb.setFont(new Font("", Font.BOLD, 25));
+		
+		tempOrderListTitleLb.setBounds(25, 25, 275, 100);
+		this.orderListTitle.add(tempOrderListTitleLb);
+		
+		this.goBackFromOrdListBtn.setBounds(325, 75, 150, 25);
+		this.orderListTitle.add(this.goBackFromOrdListBtn);
+		
+		this.orderListTitle.setBounds(0, 0, 500, 150);
+		this.orderListPanel.add(this.orderListTitle);		
+	}
+	public void setOrderListBody(int tabNum){
+		this.orderListScroll.setPreferredSize(new Dimension(500, 600));
+		this.orderListScroll.setWheelScrollingEnabled(true);
+		this.orderListScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		this.orderListScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		this.orderListBody.setLayout(new GridLayout(0, 3, 5, 5));
+		
+		Iterator<OrderedMenuItem> tempOrderListItr = KitchenStatus.orderList.iterator();
+		
+		
+		while(tempOrderListItr.hasNext()){
+			OrderedMenuItem tempOrderedMenuItem = tempOrderListItr.next();
+			if(tempOrderedMenuItem.getTabNum() != tabNum)
+				continue;
+			
+			JPanel tempOrderedMenuItemInfo = new JPanel(new GridLayout(3, 1));
+			tempOrderedMenuItemInfo.add(new JLabel("orderIndex: " + tempOrderedMenuItem.getIdx()));
+			tempOrderedMenuItemInfo.add(new JLabel(tempOrderedMenuItem.getTitle()));
+			tempOrderedMenuItemInfo.add(new JLabel("tabNum: " + tempOrderedMenuItem.getTabNum()));
+			this.orderListBody.add(tempOrderedMenuItemInfo);
+			
+			this.orderListBody.add(new JLabel(tempOrderedMenuItem.getStatus()));
+			
+			KitchenBtn tempCancelBtn = new KitchenBtn("Cancel");
+			tempCancelBtn.setOrderIdx(tempOrderedMenuItem.getOrderIdx());
+			if(tempOrderedMenuItem.getStatus().equals("being cooked"))
+				tempCancelBtn.setEnabled(false);
+			this.cancelBtnList.add(tempCancelBtn);
+			this.orderListBody.add(tempCancelBtn);
+		}
+		this.orderListBody.add(new JLabel(""));
+		this.orderListBody.add(new JLabel(""));
+		
+		this.orderListScroll.setBounds(0, 150, 500, 600);
+		this.orderListPanel.add(this.orderListScroll);
+	}
+	public void setOrderListPanel(int tabNum){
+		this.orderListPanel.setLayout(null);;
+		this.cancelBtnList.clear();
+		this.setOrderListTitle();
+		this.setOrderListBody(tabNum);
+		
+	}
+	//ordListPanel end
 	public CustomerPanelSet(){
 		this.setMainPanel();
 		this.setComplainPanel();
-	
+		this.setTabNumPanel();
 	}
 }
 

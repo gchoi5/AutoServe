@@ -18,6 +18,7 @@ public class AutoServe{
 
 		new UserInterface();
 		
+		
 	/*	
 		//Customer sends order(s) to Waiter
 		Customer customer = new Customer();
