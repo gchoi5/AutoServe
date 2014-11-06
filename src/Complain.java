@@ -1,4 +1,5 @@
 import java.util.*;
+import java.sql.*;
 
 class Complain{
 	private int idx;
@@ -84,8 +85,25 @@ class ComplainList{
 		
 		complainList.add(new Complain(nextComplainIdx, tabNum, content));
 
-		nextComplainIdx++;
 
+		DatabaseControlObject dbCO = new DatabaseControlObject();
+		dbCO.openConnection();
+
+		String query = "insert into Complain values (?, ?, ?)";
+		try{
+			dbCO.setPreparedStatement(dbCO.getConnection().prepareStatement(query));
+				dbCO.getPreparedStatement().setInt(1, nextComplainIdx);
+				dbCO.getPreparedStatement().setInt(2, tabNum);
+				dbCO.getPreparedStatement().setString(3, content);
+			dbCO.getPreparedStatement().executeUpdate();
+		}catch(SQLException sqle){
+			System.out.println("SQL Exception while inserting trend menu"+ sqle.toString());
+			return false;
+		}
+
+		dbCO.closeConnection();
+
+		nextComplainIdx++;
 		return true;
 	}
 	public static boolean removeComplain(int complainIdx){

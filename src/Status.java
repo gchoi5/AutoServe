@@ -229,7 +229,7 @@ class KitchenStatus{
 			while(dbCO.getResultSet().next()){
 				orderList.add(new OrderedMenuItem(	dbCO.getResultSet().getInt(1),
 													MenuTable.getMenuItem(dbCO.getResultSet().getInt(2)),
-													dbCO.getResultSet().getInt(2)));
+													dbCO.getResultSet().getInt(3)));
 				nextOrderListIndex = dbCO.getResultSet().getInt(1);
 			}
 		}catch(SQLException sqle){

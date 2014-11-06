@@ -33,7 +33,15 @@ class UserInterface extends JFrame implements ActionListener{
 	}
 	public void setContents(){
 		this.getContentPane().add("logInPanel", this.logInPanelSet.logInPanel);
+
 		this.getContentPane().add("mngPanel", this.mngPanelSet.mngPanel);
+		this.getContentPane().add("mngAddEmployeePanel", this.mngPanelSet.addEmployeePanel);
+		this.getContentPane().add("mngDeleteEmployeePanel", this.mngPanelSet.deleteEmployeePanel);
+		this.getContentPane().add("mngAddMenuPanel", this.mngPanelSet.addMenuPanel);
+		this.getContentPane().add("mngDeleteMenuPanel", this.mngPanelSet.deleteMenuPanel);
+		this.getContentPane().add("mngAddTrendMenuPanel", this.mngPanelSet.addTrendMenuPanel);
+		this.getContentPane().add("mngDeleteTrendMenuPanel", this.mngPanelSet.deleteTrendMenuPanel);
+
 		this.getContentPane().add("waiterPanel", this.waiterPanelSet.waiterPanel);
 		this.getContentPane().add("waiterOrdReqPanel", this.waiterPanelSet.orderReqFramePanel);
 		this.getContentPane().add("kaPanel", this.kaPanelSet.mainPanel);
@@ -64,6 +72,28 @@ class UserInterface extends JFrame implements ActionListener{
 		this.mngPanelSet.goTokitchenOrderList.addActionListener(this);
 		this.mngPanelSet.goBackToLogIn.addActionListener(this);
 
+		this.mngPanelSet.addEmployeeBtn.addActionListener(this);
+		this.mngPanelSet.deleteEmployeeBtn.addActionListener(this);
+		this.mngPanelSet.addEmployeeSubmitBtn.addActionListener(this);
+		this.mngPanelSet.deleteEmployeeSubmitBtn.addActionListener(this);
+
+		this.mngPanelSet.addMenuBtn.addActionListener(this);
+		this.mngPanelSet.deleteMenuBtn.addActionListener(this);
+		this.mngPanelSet.addMenuSubmitBtn.addActionListener(this);
+		this.mngPanelSet.deleteMenuSubmitBtn.addActionListener(this);
+
+		this.mngPanelSet.addTrendMenuBtn.addActionListener(this);
+		this.mngPanelSet.deleteTrendMenuBtn.addActionListener(this);
+		this.mngPanelSet.addTmSubmitBtn.addActionListener(this);
+		this.mngPanelSet.deleteTrendMenuSubmitBtn.addActionListener(this);
+
+		this.mngPanelSet.goBackFromAddEmployeeBtn.addActionListener(this);
+		this.mngPanelSet.goBackFromDeleteEmployeeBtn.addActionListener(this);
+		this.mngPanelSet.goBackFromAddMenuPanelBtn.addActionListener(this);
+		this.mngPanelSet.goBackFromDeleteMenuPanelBtn.addActionListener(this);
+		this.mngPanelSet.goBackFromAddTmPanelBtn.addActionListener(this);
+		this.mngPanelSet.goBackFromDeleteTrendMenuPanelBtn.addActionListener(this);
+
 		this.waiterPanelSet.cstmOrderReq.addActionListener(this);
 		this.waiterPanelSet.submitOrdReqBtn.addActionListener(this);
 		this.waiterPanelSet.goBackFromOrdReqBtn.addActionListener(this);
@@ -83,6 +113,8 @@ class UserInterface extends JFrame implements ActionListener{
 		this.customerPanelSet.complainGoBackBtn.addActionListener(this);
 		this.customerPanelSet.submitBtn.addActionListener(this);
 		this.customerPanelSet.ordListBtn.addActionListener(this);
+		this.customerPanelSet.goBackFromTabNumPanelBtn.addActionListener(this);
+		this.customerPanelSet.goBackFromOrdListBtn.addActionListener(this);
 
 		this.kitchenPanelSet.goBackFromOrderListPanelBtn.addActionListener(this);
 	}
@@ -153,16 +185,15 @@ class UserInterface extends JFrame implements ActionListener{
 
 			this.contents.show(this.getContentPane(), "kitchenOrderList");
 		}
-		else if(this.kitchenPanelSet.statusBtnList.contains(ae.getSource())){
+		else if(	this.kitchenPanelSet.statusBtnList.contains(ae.getSource())){
 			KitchenBtn tempStatusBtn = (KitchenBtn)ae.getSource();
 			tempStatusBtn.toggleStatus();
 			KitchenStatus.getFromOrderList(tempStatusBtn.getOrderIdx()).setStatus(tempStatusBtn.getStatus());
 
 			KitchenStatus.printOrderList();
 		}
-		else if(this.kitchenPanelSet.submitBtnList.contains(ae.getSource())){
+		else if(	this.kitchenPanelSet.submitBtnList.contains(ae.getSource())){
 			KitchenBtn tempSubmitBtn = (KitchenBtn)ae.getSource();
-
 
 			OrderControlObject orderCO = new OrderControlObject();
 			orderCO.serveOrder(KitchenStatus.getFromOrderList(tempSubmitBtn.getOrderIdx()).getTabNum(), tempSubmitBtn.getOrderIdx());
@@ -175,6 +206,20 @@ class UserInterface extends JFrame implements ActionListener{
 			this.kitchenPanelSet.orderListPanel.removeAll();
 			this.kitchenPanelSet.orderListPanel.revalidate();
 			this.kitchenPanelSet.setOrderListPanel();
+		}
+		else if(this.customerPanelSet.cancelBtnList.contains(ae.getSource())){
+			KitchenBtn tempSubmitBtn = (KitchenBtn)ae.getSource();
+
+			OrderControlObject orderCO = new OrderControlObject();
+			orderCO.cancelOrder(KitchenStatus.getFromOrderList(tempSubmitBtn.getOrderIdx()).getTabNum(), tempSubmitBtn.getOrderIdx());
+
+			KitchenStatus.printOrderList();
+
+			this.customerPanelSet.orderListBody.removeAll();
+			this.customerPanelSet.orderListBody.revalidate();
+			this.customerPanelSet.orderListPanel.removeAll();
+			this.customerPanelSet.orderListPanel.revalidate();
+			this.customerPanelSet.setOrderListPanel(Integer.parseInt(this.customerPanelSet.tabNumTA.getText()));
 		}
 		else if(	ae.getSource() == this.kaPanelSet.mainGoBackBtn || 
 					ae.getSource() == this.mngPanelSet.goBackToLogIn){
@@ -206,6 +251,7 @@ class UserInterface extends JFrame implements ActionListener{
 			this.waiterPanelSet.setOrderReqFramePanel();
 		}
 		else if(ae.getSource() == this.customerPanelSet.menuTableBtn){
+			MenuTable.loadMenuList();
 			KitchenStatus.loadIngredientList();
 			KitchenStatus.printIngredientList();
 			MenuTable.updateMenuListAvailability();
@@ -235,13 +281,28 @@ class UserInterface extends JFrame implements ActionListener{
 		else if(ae.getSource() == this.customerPanelSet.complainGoBackBtn){
 			this.contents.show(this.getContentPane(), "customerMainPanel");
 		}
-		else if(ae.getSource() == this.customerPanelSet.ordListBtn){
+		else if(	ae.getSource() == this.customerPanelSet.ordListBtn ||
+					ae.getSource() == this.customerPanelSet.goBackFromOrdListBtn){
 			this.contents.show(this.getContentPane(), "customerTabNumPanel");
 			
 		}
 		else if(ae.getSource() == this.customerPanelSet.submitBtn){
-			this.contents.show(this.getContentPane(), "customerOrderList");
-			
+			KitchenStatus.loadOrderList();
+			this.customerPanelSet.orderListBody.removeAll();
+			this.customerPanelSet.orderListBody.revalidate();
+			this.customerPanelSet.orderListPanel.removeAll();
+			this.customerPanelSet.orderListPanel.revalidate();
+			this.customerPanelSet.setOrderListPanel(Integer.parseInt(this.customerPanelSet.tabNumTA.getText()));
+
+			Iterator<KitchenBtn> tempKitchenBtn = this.customerPanelSet.cancelBtnList.iterator();
+			while(tempKitchenBtn.hasNext()){
+				tempKitchenBtn.next().addActionListener(this);
+			}
+
+			this.contents.show(this.getContentPane(), "customerOrderListPanel");
+		}
+		else if(ae.getSource() == this.customerPanelSet.goBackFromTabNumPanelBtn){
+			this.contents.show(this.getContentPane(), "customerMainPanel");
 		}
 		else if(ae.getSource() == this.menuPanelSet.sendOrderBtn){
 			Iterator<JCheckBox> tempMenuBtnItr = this.menuPanelSet.menuBtnList.iterator();			
@@ -274,6 +335,82 @@ class UserInterface extends JFrame implements ActionListener{
 				this.contents.show(this.getContentPane(), "waiterPanel");
 			}
 		}
+		else if(ae.getSource() == this.mngPanelSet.addEmployeeBtn){
+			this.contents.show(this.getContentPane(), "mngAddEmployeePanel");
+		}
+		else if(ae.getSource() == this.mngPanelSet.deleteEmployeeBtn){
+			this.contents.show(this.getContentPane(), "mngDeleteEmployeePanel");
+		}
+		else if(ae.getSource() == this.mngPanelSet.addMenuBtn){
+			this.contents.show(this.getContentPane(), "mngAddMenuPanel");
+		}
+		else if(ae.getSource() == this.mngPanelSet.deleteMenuBtn){
+			this.contents.show(this.getContentPane(), "mngDeleteMenuPanel");
+		}
+		else if(ae.getSource() == this.mngPanelSet.addTrendMenuBtn){
+			this.contents.show(this.getContentPane(), "mngAddTrendMenuPanel");
+		}
+		else if(ae.getSource() == this.mngPanelSet.deleteTrendMenuBtn){
+			this.contents.show(this.getContentPane(), "mngDeleteTrendMenuPanel");
+		}
+		else if(ae.getSource() == this.mngPanelSet.addEmployeeSubmitBtn){
+			Manager manager = new Manager();
+
+			manager.insertEmployee(	this.mngPanelSet.emplName.getText(),
+									Integer.parseInt(this.mngPanelSet.emplAge.getText()),
+									this.mngPanelSet.emplId.getText(),
+									this.mngPanelSet.emplPass.getText(),
+									this.mngPanelSet.emplType.getText());
+			this.mngPanelSet.emplName.setText("");
+			this.mngPanelSet.emplAge.setText("");
+			this.mngPanelSet.emplId.setText("");
+			this.mngPanelSet.emplPass.setText("");
+			this.mngPanelSet.emplType.setText("");
+		}
+		else if(ae.getSource() == this.mngPanelSet.deleteEmployeeSubmitBtn){
+			Manager manager = new Manager();
+
+			manager.deleteEmployee(this.mngPanelSet.deleteEmplId.getText());
+			this.mngPanelSet.deleteEmplId.setText("");
+		}
+		else if(ae.getSource() == this.mngPanelSet.addMenuSubmitBtn){
+			Manager manager = new Manager();
+
+			manager.insertMenu(	this.mngPanelSet.menuNameToAddTA.getText(),
+								Double.parseDouble(this.mngPanelSet.menuPriceToAddTA.getText()),
+								this.mngPanelSet.menuImgRefToAddTA.getText());
+			this.mngPanelSet.menuNameToAddTA.setText("");
+			this.mngPanelSet.menuPriceToAddTA.setText("");
+			this.mngPanelSet.menuImgRefToAddTA.setText("");
+		}
+		else if(ae.getSource() == this.mngPanelSet.deleteMenuSubmitBtn){
+			Manager manager = new Manager();
+
+			manager.deleteMenu(this.mngPanelSet.menuNameToDeleteTA.getText());
+			this.mngPanelSet.menuNameToDeleteTA.setText("");
+		}
+		else if(ae.getSource() == this.mngPanelSet.addTmSubmitBtn){
+			Manager manager = new Manager();
+
+			manager.insertTrendMenu(	this.mngPanelSet.tmNameToAddTA.getText(),
+										Double.parseDouble(this.mngPanelSet.tmRatingToAddTA.getText()));
+			this.mngPanelSet.tmNameToAddTA.setText("");
+			this.mngPanelSet.tmRatingToAddTA.setText("");
+		}
+		else if(ae.getSource() == this.mngPanelSet.deleteTrendMenuSubmitBtn){
+			Manager manager = new Manager();
+
+			manager.deleteTrendMenu(this.mngPanelSet.trendMenuNameToDeleteTA.getText());
+			this.mngPanelSet.trendMenuNameToDeleteTA.setText("");
+		}
+		else if(	ae.getSource() == this.mngPanelSet.goBackFromAddEmployeeBtn ||
+					ae.getSource() == this.mngPanelSet.goBackFromDeleteEmployeeBtn ||
+					ae.getSource() == this.mngPanelSet.goBackFromAddMenuPanelBtn ||
+					ae.getSource() == this.mngPanelSet.goBackFromDeleteMenuPanelBtn ||
+					ae.getSource() == this.mngPanelSet.goBackFromAddTmPanelBtn ||
+					ae.getSource() == this.mngPanelSet.goBackFromDeleteTrendMenuPanelBtn){
+			this.contents.show(this.getContentPane(), "mngPanel");
+		}
 	
 	}
 }
@@ -282,7 +419,19 @@ class MngPanelSet{
 	public JPanel mngPanel = new JPanel();
 
 	public JButton goTokitchenOrderList = new JButton("Order List");
+
+	public JButton addEmployeeBtn = new JButton("Add Employee");
+	public JButton deleteEmployeeBtn = new JButton("Delete Employee");
+
+	public JButton addMenuBtn = new JButton("Add Menu");
+	public JButton deleteMenuBtn = new JButton("Delete Menu");
+
+	public JButton addTrendMenuBtn = new JButton("Add Trend Menu");
+	public JButton deleteTrendMenuBtn = new JButton("Delete Trend Menu");
+
 	public JButton goBackToLogIn = new JButton("Go Back");
+
+
 
 	public void setMngPanel(){
 		this.mngPanel.setLayout(null);
@@ -290,18 +439,227 @@ class MngPanelSet{
 		this.goTokitchenOrderList.setBounds(50, 50, 400, 50);
 		this.mngPanel.add(this.goTokitchenOrderList);
 
-		this.goBackToLogIn.setBounds(50, 150, 400, 50);
+		this.addEmployeeBtn.setBounds(50, 150, 175, 50);
+		this.mngPanel.add(this.addEmployeeBtn);
+		this.deleteEmployeeBtn.setBounds(275, 150, 175, 50);
+		this.mngPanel.add(this.deleteEmployeeBtn);
+
+		this.addMenuBtn.setBounds(50, 250, 175, 50);
+		this.mngPanel.add(this.addMenuBtn);
+		this.deleteMenuBtn.setBounds(275, 250, 175, 50);
+		this.mngPanel.add(this.deleteMenuBtn);
+
+		this.addTrendMenuBtn.setBounds(50, 350, 175, 50);
+		this.mngPanel.add(this.addTrendMenuBtn);
+		this.deleteTrendMenuBtn.setBounds(275, 350, 175, 50);
+		this.mngPanel.add(this.deleteTrendMenuBtn);
+
+		this.goBackToLogIn.setBounds(50, 650, 400, 50);
 		this.mngPanel.add(this.goBackToLogIn);
+
+		
 	}
 
 	//mngPanel
+	//add & delete start
+	public JPanel addEmployeePanel = new JPanel();
+
+	public JTextField emplName = new JTextField();
+	public JTextField emplAge = new JTextField();
+	public JTextField emplId = new JTextField();
+	public JTextField emplPass = new JTextField();
+	public JTextField emplType = new JTextField();
+
+	public JButton addEmployeeSubmitBtn = new JButton("Submit");
+	public JButton goBackFromAddEmployeeBtn = new JButton("Go Back");
+
+	public void setAddEmployeePanel(){
+		this.addEmployeePanel.setLayout(null);
+
+		JLabel tempEmplNameLb = new JLabel("Name: ", JLabel.LEFT);
+		tempEmplNameLb.setBounds(50, 50, 100, 50);
+		this.addEmployeePanel.add(tempEmplNameLb);
+		this.emplName.setBounds(200, 50, 250, 50);
+		this.addEmployeePanel.add(this.emplName);
+
+		JLabel tempEmplAgeLb = new JLabel("Age: ", JLabel.LEFT);
+		tempEmplAgeLb.setBounds(50, 150, 100, 50);
+		this.addEmployeePanel.add(tempEmplAgeLb);
+		this.emplAge.setBounds(200, 150, 250, 50);
+		this.addEmployeePanel.add(this.emplAge);
+
+		JLabel tempEmplIdLb = new JLabel("Id: ", JLabel.LEFT);
+		tempEmplIdLb.setBounds(50, 250, 100, 50);
+		this.addEmployeePanel.add(tempEmplIdLb);
+		this.emplId.setBounds(200, 250, 250, 50);
+		this.addEmployeePanel.add(this.emplId);
+
+		JLabel tempEmplPassLb = new JLabel("Pass: ", JLabel.LEFT);
+		tempEmplPassLb.setBounds(50, 350, 100, 50);
+		this.addEmployeePanel.add(tempEmplPassLb);
+		this.emplPass.setBounds(200, 350, 250, 50);
+		this.addEmployeePanel.add(this.emplPass);
+
+		JLabel tempEmplTypeLb = new JLabel("Type: ", JLabel.LEFT);
+		tempEmplTypeLb.setBounds(50, 450, 100, 50);
+		this.addEmployeePanel.add(tempEmplTypeLb);
+		this.emplType.setBounds(200, 450, 250, 50);
+		this.addEmployeePanel.add(this.emplType);
+
+		this.addEmployeeSubmitBtn.setBounds(50, 550, 400, 50);
+		this.addEmployeePanel.add(this.addEmployeeSubmitBtn);
+		this.goBackFromAddEmployeeBtn.setBounds(50, 650, 400, 50);
+		this.addEmployeePanel.add(this.goBackFromAddEmployeeBtn);
+	}
+
+	public JPanel deleteEmployeePanel = new JPanel();
+
+	public JTextField deleteEmplId = new JTextField();
+
+	public JButton deleteEmployeeSubmitBtn = new JButton("Submit");
+	public JButton goBackFromDeleteEmployeeBtn = new JButton("Go Back");
+
+	public void setDeleteEmployeePanel(){
+		this.deleteEmployeePanel.setLayout(null);
+
+		JLabel tempEmplIdLb = new JLabel("Id: ", JLabel.LEFT);
+		tempEmplIdLb.setBounds(50, 250, 100, 50);
+		this.deleteEmployeePanel.add(tempEmplIdLb);
+		this.deleteEmplId.setBounds(200, 250, 250, 50);
+		this.deleteEmployeePanel.add(this.deleteEmplId);
 	
+		this.deleteEmployeeSubmitBtn.setBounds(50, 550, 400, 50);
+		this.deleteEmployeePanel.add(this.deleteEmployeeSubmitBtn);
+		this.goBackFromDeleteEmployeeBtn.setBounds(50, 650, 400, 50);
+		this.deleteEmployeePanel.add(this.goBackFromDeleteEmployeeBtn);
+	}
+	//add & delete end	
+	//add & delete Menu start
+	public JPanel addMenuPanel = new JPanel();
+
+	public JTextField menuNameToAddTA = new JTextField();
+	public JTextField menuPriceToAddTA = new JTextField();
+	public JTextField menuImgRefToAddTA = new JTextField();
+
+	public JButton addMenuSubmitBtn = new JButton("Submit");
+	public JButton goBackFromAddMenuPanelBtn = new JButton("Go Back");
+	
+	public void setAddMenuPanel(){
+		this.addMenuPanel.setLayout(null);
+
+		JLabel tempEmplNameLb = new JLabel("Menu Name: ", JLabel.LEFT);
+		tempEmplNameLb.setBounds(50, 50, 100, 50);
+		this.addMenuPanel.add(tempEmplNameLb);
+		this.menuNameToAddTA.setBounds(200, 50, 250, 50);
+		this.addMenuPanel.add(this.menuNameToAddTA);
+
+		JLabel tempEmplAgeLb = new JLabel("Price: ", JLabel.LEFT);
+		tempEmplAgeLb.setBounds(50, 150, 100, 50);
+		this.addMenuPanel.add(tempEmplAgeLb);
+		this.menuPriceToAddTA.setBounds(200, 150, 250, 50);
+		this.addMenuPanel.add(this.menuPriceToAddTA);
+
+		JLabel tempEmplIdLb = new JLabel("Img Ref: ", JLabel.LEFT);
+		tempEmplIdLb.setBounds(50, 250, 100, 50);
+		this.addMenuPanel.add(tempEmplIdLb);
+		this.menuImgRefToAddTA.setBounds(200, 250, 250, 50);
+		this.addMenuPanel.add(this.menuImgRefToAddTA);
+
+		this.addMenuSubmitBtn.setBounds(50, 550, 400, 50);
+		this.addMenuPanel.add(this.addMenuSubmitBtn);
+		this.goBackFromAddMenuPanelBtn.setBounds(50, 650, 400, 50);
+		this.addMenuPanel.add(this.goBackFromAddMenuPanelBtn);
+	}
+
+
+	public JPanel deleteMenuPanel = new JPanel();
+
+	public JTextField menuNameToDeleteTA = new JTextField();
+
+	public JButton deleteMenuSubmitBtn = new JButton("Submit");
+	public JButton goBackFromDeleteMenuPanelBtn = new JButton("Go Back");
+
+	public void setDeleteMenuPanel(){
+		this.deleteMenuPanel.setLayout(null);
+
+		JLabel tempEmplIdLb = new JLabel("Menu Name: ", JLabel.LEFT);
+		tempEmplIdLb.setBounds(50, 50, 100, 50);
+		this.deleteMenuPanel.add(tempEmplIdLb);
+		this.menuNameToDeleteTA.setBounds(200, 50, 250, 50);
+		this.deleteMenuPanel.add(this.menuNameToDeleteTA);
+	
+		this.deleteMenuSubmitBtn.setBounds(50, 550, 400, 50);
+		this.deleteMenuPanel.add(this.deleteMenuSubmitBtn);
+		this.goBackFromDeleteMenuPanelBtn.setBounds(50, 650, 400, 50);
+		this.deleteMenuPanel.add(this.goBackFromDeleteMenuPanelBtn);
+	}
+	//add & delete Menu end 
+	//add & delete TrendMenu start
+	public JPanel addTrendMenuPanel = new JPanel();
+
+	public JTextField tmNameToAddTA = new JTextField();
+	public JTextField tmRatingToAddTA = new JTextField();
+
+	public JButton addTmSubmitBtn = new JButton("Submit");
+	public JButton goBackFromAddTmPanelBtn = new JButton("Go Back");
+	
+	public void setAddTrendMenuPanel(){
+		this.addTrendMenuPanel.setLayout(null);
+
+		JLabel tempEmplNameLb = new JLabel("Menu Name: ", JLabel.LEFT);
+		tempEmplNameLb.setBounds(50, 50, 100, 50);
+		this.addTrendMenuPanel.add(tempEmplNameLb);
+		this.tmNameToAddTA.setBounds(200, 50, 250, 50);
+		this.addTrendMenuPanel.add(this.tmNameToAddTA);
+
+		JLabel tempEmplAgeLb = new JLabel("Rating: ", JLabel.LEFT);
+		tempEmplAgeLb.setBounds(50, 150, 100, 50);
+		this.addTrendMenuPanel.add(tempEmplAgeLb);
+		this.tmRatingToAddTA.setBounds(200, 150, 250, 50);
+		this.addTrendMenuPanel.add(this.tmRatingToAddTA);
+
+		this.addTmSubmitBtn.setBounds(50, 550, 400, 50);
+		this.addTrendMenuPanel.add(this.addTmSubmitBtn);
+		this.goBackFromAddTmPanelBtn.setBounds(50, 650, 400, 50);
+		this.addTrendMenuPanel.add(this.goBackFromAddTmPanelBtn);
+	}
+
+
+	public JPanel deleteTrendMenuPanel = new JPanel();
+
+	public JTextField trendMenuNameToDeleteTA = new JTextField();
+
+	public JButton deleteTrendMenuSubmitBtn = new JButton("Submit");
+	public JButton goBackFromDeleteTrendMenuPanelBtn = new JButton("Go Back");
+
+	public void setDeleteTrendMenuPanel(){
+		this.deleteTrendMenuPanel.setLayout(null);
+
+		JLabel tempEmplIdLb = new JLabel("Menu Name: ", JLabel.LEFT);
+		tempEmplIdLb.setBounds(50, 50, 100, 50);
+		this.deleteTrendMenuPanel.add(tempEmplIdLb);
+		this.trendMenuNameToDeleteTA.setBounds(200, 50, 250, 50);
+		this.deleteTrendMenuPanel.add(this.trendMenuNameToDeleteTA);
+	
+		this.deleteTrendMenuSubmitBtn.setBounds(50, 550, 400, 50);
+		this.deleteTrendMenuPanel.add(this.deleteTrendMenuSubmitBtn);
+		this.goBackFromDeleteTrendMenuPanelBtn.setBounds(50, 650, 400, 50);
+		this.deleteTrendMenuPanel.add(this.goBackFromDeleteTrendMenuPanelBtn);
+	}
+	//add & delete TrendMenu end 
 	public MngPanelSet(){
 		this.setMngPanel();
+		this.setAddEmployeePanel();
+		this.setDeleteEmployeePanel();
+		this.setAddMenuPanel();
+		this.setDeleteMenuPanel();
+		this.setAddTrendMenuPanel();
+		this.setDeleteTrendMenuPanel();
 	}
 }
 class MyTextField extends JTextField{
 	private int idx;
+	private int tabNum;
 
 	/**
 	 * @return the idx
@@ -316,6 +674,13 @@ class MyTextField extends JTextField{
 	public void setIdx(int idx) {
 		this.idx = idx;
 	}
+	public int getTabNum(){
+		return idx;
+	}
+	public void setTabNum(int tabNum){
+		this.tabNum = tabNum;
+	}
+	
 }
 
 class WaiterPanelSet{
@@ -396,6 +761,7 @@ class WaiterPanelSet{
 			
 			this.ordReqTabNumTFList.add(new MyTextField());
 			this.ordReqTabNumTFList.get(tempTabNumTfIdx).setIdx(tempOrderedMenuItem.getOrderIdx()); 
+			this.ordReqTabNumTFList.get(tempTabNumTfIdx).setTabNum(tempOrderedMenuItem.getTabNum()); 
 			this.ordReqTabNumTFList.get(tempTabNumTfIdx).setPreferredSize(new Dimension(25, 25));
 			this.orderReqListPanel.add(this.ordReqTabNumTFList.get(tempTabNumTfIdx));
 
@@ -508,15 +874,19 @@ class CustomerPanelSet{
 	public JPanel tabNumPanel = new JPanel();
 	public JTextArea tabNumTA = new JTextArea();
 	public JButton submitBtn = new JButton("Submit");
+	public JButton goBackFromTabNumPanelBtn = new JButton("Go Back");
 	
 	public void setTabNumPanel(){
 		this.tabNumPanel.setLayout(null);
 		
-		this.tabNumTA.setBounds(50, 300, 400, 50);
+		this.tabNumTA.setBounds(50, 250, 400, 50);
 		this.tabNumPanel.add(this.tabNumTA);
 		
-		this.submitBtn.setBounds(50, 400, 400, 50);
+		this.submitBtn.setBounds(50, 350, 400, 50);
 		this.tabNumPanel.add(this.submitBtn);
+
+		this.goBackFromTabNumPanelBtn.setBounds(50, 450, 400, 50);
+		this.tabNumPanel.add(this.goBackFromTabNumPanelBtn);
 		
 	}
 	//tabNumPanel end
@@ -530,7 +900,7 @@ class CustomerPanelSet{
 	public JScrollPane orderListScroll = new JScrollPane(orderListBody);
 	
 	public LinkedList<KitchenBtn> cancelBtnList = new LinkedList<KitchenBtn>();
-	public JButton goBackFromOrdListBtn = new JButton();
+	public JButton goBackFromOrdListBtn = new JButton("Go Back");
 	
 	public void setOrderListTitle(){
 		this.orderListTitle.setLayout(null);
@@ -560,8 +930,10 @@ class CustomerPanelSet{
 		
 		while(tempOrderListItr.hasNext()){
 			OrderedMenuItem tempOrderedMenuItem = tempOrderListItr.next();
-			if(tempOrderedMenuItem.getTabNum() != tabNum)
+			if(tempOrderedMenuItem.getTabNum() != tabNum){
+				System.out.println(tempOrderedMenuItem.getTabNum());
 				continue;
+			}
 			
 			JPanel tempOrderedMenuItemInfo = new JPanel(new GridLayout(3, 1));
 			tempOrderedMenuItemInfo.add(new JLabel("orderIndex: " + tempOrderedMenuItem.getIdx()));
@@ -827,7 +1199,7 @@ class KitchenPanelSet{
 			OrderedMenuItem tempOrderedMenuItem = tempOrderListItr.next();
 
 			JPanel tempOrderedMenuItemInfo = new JPanel(new GridLayout(3, 1));
-			tempOrderedMenuItemInfo.add(new JLabel("orderIndex: " + tempOrderedMenuItem.getIdx()));
+			tempOrderedMenuItemInfo.add(new JLabel("orderIndex: " + tempOrderedMenuItem.getOrderIdx()));
 			tempOrderedMenuItemInfo.add(new JLabel(tempOrderedMenuItem.getTitle()));
 			tempOrderedMenuItemInfo.add(new JLabel("tabNum: " + tempOrderedMenuItem.getTabNum()));
 			this.orderListBody.add(tempOrderedMenuItemInfo);

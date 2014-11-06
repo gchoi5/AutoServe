@@ -277,6 +277,8 @@ class MenuTable{
 	
 	
 	public static void loadMenuList(){
+		nextMenuItemIndex = 1;
+
 		DatabaseControlObject dbCO = new DatabaseControlObject();
 		dbCO.openConnection();
 	
@@ -285,6 +287,7 @@ class MenuTable{
 			dbCO.setResultSet(dbCO.getStatement().executeQuery("select * from menu"));
 
 			menuNum = 0;
+			menuList.clear();
 			while(dbCO.getResultSet().next()){
 				menuList.add(new MenuItem(	nextMenuItemIndex,
 											dbCO.getResultSet().getString(1),

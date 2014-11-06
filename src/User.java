@@ -270,7 +270,7 @@ class Manager extends KitchenAssistant{
 		dbCO.closeConnection();
 		return true;
 	}
-	public boolean insertTrendMenu(String menuName, int rating){
+	public boolean insertTrendMenu(String menuName, double rating){
 		DatabaseControlObject dbCO = new DatabaseControlObject();
 		dbCO.openConnection();
 
