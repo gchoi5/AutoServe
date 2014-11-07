@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.5.38, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.38, for debian-linux-gnu (i686)
 --
 -- Host: localhost    Database: AutoServe
 -- ------------------------------------------------------
@@ -14,6 +14,74 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `Complain`
+--
+
+DROP TABLE IF EXISTS `Complain`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Complain` (
+  `idx` int(11) DEFAULT NULL,
+  `tabNum` int(11) DEFAULT NULL,
+  `content` varchar(512) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Complain`
+--
+
+LOCK TABLES `Complain` WRITE;
+/*!40000 ALTER TABLE `Complain` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Complain` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `OrderList`
+--
+
+DROP TABLE IF EXISTS `OrderList`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `OrderList` (
+  `menuIdx` int(11) DEFAULT NULL,
+  `orderIdx` int(11) DEFAULT NULL,
+  `tabNum` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `OrderList`
+--
+
+LOCK TABLES `OrderList` WRITE;
+/*!40000 ALTER TABLE `OrderList` DISABLE KEYS */;
+/*!40000 ALTER TABLE `OrderList` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SelectedMenuList`
+--
+
+DROP TABLE IF EXISTS `SelectedMenuList`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SelectedMenuList` (
+  `menuIdx` int(11) DEFAULT NULL,
+  `orderIdx` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SelectedMenuList`
+--
+
+LOCK TABLES `SelectedMenuList` WRITE;
+/*!40000 ALTER TABLE `SelectedMenuList` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SelectedMenuList` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `employee`
@@ -168,4 +236,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-24  8:49:52
+-- Dump completed on 2014-11-07 13:57:54
